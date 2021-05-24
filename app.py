@@ -20,22 +20,13 @@ def good_input(X, col_names):
         return True
 
 model_path = 'models/'
-# modelfile = 'models/model.txt'
 gbm = lgb.Booster(model_file=model_path + 'model.txt')
 if 'objective' not in gbm.params:
     gbm.params['objective'] = 'regression'
 
-# read schema and build dataframe for prediction
-# with open(model_path+'X_column_names', 'rb') as fp:
-#     col_names = p.load(fp)
-#     print(col_names)
-# with open(model_path+'X_column_types', 'rb') as fp:
-#     col_types = p.load(fp)
-with open('models/X_column_names.json', 'r') as fp:
+with open(model_path+'X_column_names.json', 'r') as fp:
     col_names = json.load(fp)
-    #print(col_names)
-#print(col_names)
-with open('models/X_column_types.json', 'r') as fp:
+with open(model_path+'X_column_types.json', 'r') as fp:
     col_types = json.load(fp)
 schema = {c: col_types[i] for i, c in enumerate(col_names)}
 
