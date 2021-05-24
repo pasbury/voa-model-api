@@ -22,6 +22,7 @@ def good_input(X, col_names):
 
 @app.route('/voa-api/', methods=['POST'])
 def evalmodel():
+    print(col_names)
     X = request.get_json()
     if good_input(X,col_names):
         X_df = pd.DataFrame(X, columns=col_names).astype(schema)
@@ -49,10 +50,13 @@ if __name__ == '__main__':
     #     col_types = p.load(fp)
     with open('models/X_column_names.json', 'r') as fp:
         col_names = json.load(fp)
+        print(col_names)
+    print(col_names)
     with open('models/X_column_types.json', 'r') as fp:
         col_types = json.load(fp)
     schema = {c: col_types[i] for i, c in enumerate(col_names)}
 
     
     explainer = shap.TreeExplainer(gbm)
+
     app.run(debug=True)
