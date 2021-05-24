@@ -36,15 +36,16 @@ def evalmodel():
 
 if __name__ == '__main__':
     model_path = 'models/'
-    modelfile = 'models/model.txt'
+    #modelfile = 'models/model.txt'
     gbm = lgb.Booster(model_file=model_path+'model.txt')
     if 'objective' not in gbm.params:
         gbm.params['objective'] = 'regression'
         
     # read schema and build dataframe for prediction
-    with open (model_path+'X_column_names', 'rb') as fp:
+    with open(model_path+'X_column_names', 'rb') as fp:
         col_names = p.load(fp)
-    with open (model_path+'X_column_types', 'rb') as fp:
+        print(col_names)
+    with open(model_path+'X_column_types', 'rb') as fp:
         col_types = p.load(fp)    
     
     explainer = shap.TreeExplainer(gbm)
