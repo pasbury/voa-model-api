@@ -24,7 +24,7 @@ def good_input(X):
 def evalmodel():
     X = request.get_json()
     if good_input(X):
-        X_df = pd.DataFrame(X, columns=col_names).astype(col_types)
+        X_df = pd.DataFrame(X, columns=col_names).astype(schema)
         prediction = np.array2string(gbm.predict(X_df)[0])
         shap_values = explainer.shap_values(X_df)
         result = {}
@@ -42,11 +42,17 @@ if __name__ == '__main__':
         gbm.params['objective'] = 'regression'
         
     # read schema and build dataframe for prediction
-    with open(model_path+'X_column_names', 'rb') as fp:
-        col_names = p.load(fp)
-        print(col_names)
-    with open(model_path+'X_column_types', 'rb') as fp:
-        col_types = p.load(fp)    
+    # with open(model_path+'X_column_names', 'rb') as fp:
+    #     col_names = p.load(fp)
+    #     print(col_names)
+    # with open(model_path+'X_column_types', 'rb') as fp:
+    #     col_types = p.load(fp)
+    with open('models/X_column_names.json', 'r') as fp:
+        col_names = json.load(fp)
+    with open('models/X_column_types.json', 'r') as fp:
+        col_types = json.load(fp)
+    schema = {c: col_types[i] for i, c in enumerate(col_names)}
+
     
     explainer = shap.TreeExplainer(gbm)
     app.run(debug=True)
